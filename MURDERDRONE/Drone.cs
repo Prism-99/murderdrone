@@ -25,17 +25,24 @@ namespace MURDERDRONE
         private readonly IModHelper helper;
 
         public Drone()
+        : base(new AnimatedSprite("Sidekick/Drone", 1, 12, 12), Game1.player.Position, 1, "Drone")
         {
+            this.speed = 14;
+            this.hideShadow.Value = true;
+            this.damage = -1;
+            this.projectileVelocity = 16;
+            this.helper = null;
         }
 
-        public Drone(int speed, int damage, float projectileVelocity, IModHelper helper)
-        : base(new AnimatedSprite("Sidekick/Drone", 1, 12, 12), Game1.player.Position, 1, "Drone")
+        public Drone(int speed, int damage, float projectileVelocity, IModHelper helper,string sDroneName)
+        : base(new AnimatedSprite("Sidekick/Drone", 1, 12, 12), Game1.player.Position, 1, sDroneName)
         {
             this.speed = speed;
             this.hideShadow.Value = true;
             this.damage = damage;
             this.projectileVelocity = projectileVelocity;
             this.helper = helper;
+            this.name.Value = sDroneName;
         }
 
         public override bool CanSocialize => false;
