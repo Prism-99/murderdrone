@@ -34,7 +34,7 @@ namespace MURDERDRONE
             this.helper = null;
         }
 
-        public Drone(int speed, int damage, float projectileVelocity, IModHelper helper,string sDroneName)
+        public Drone(int speed, int damage, float projectileVelocity, IModHelper helper, string sDroneName)
         : base(new AnimatedSprite("Sidekick/Drone", 1, 12, 12), Game1.player.Position, 1, sDroneName)
         {
             this.speed = speed;
@@ -62,11 +62,11 @@ namespace MURDERDRONE
             float newY = Game1.player.position.Y - offsetY + r * (float)Math.Sin(t * 2 * Math.PI);
             position.Set(new Vector2(newX, newY));
 
-            t = (t + (float)time.ElapsedGameTime.TotalMilliseconds/(1000 * speed)) % 1;
+            t = (t + (float)time.ElapsedGameTime.TotalMilliseconds / (1000 * speed)) % 1;
 
             if (!throwing)
             {
-                foreach (var npc in Game1.currentLocation.getCharacters())
+                foreach (var npc in Game1.currentLocation.characters)
                 {
                     if (npc.IsMonster && npc.withinPlayerThreshold(3))
                     {
@@ -96,7 +96,7 @@ namespace MURDERDRONE
                 }
 
                 BasicProjectile.onCollisionBehavior collisionBehavior = new BasicProjectile.onCollisionBehavior(
-                    delegate(GameLocation loc, int x, int y, Character who)
+                    delegate (GameLocation loc, int x, int y, Character who)
                     {
                         Tool currentTool = null;
 
@@ -108,8 +108,13 @@ namespace MURDERDRONE
 
                         if (monster is RockCrab rockCrab)
                         {
+#if v16
+                            if (Game1.player.CurrentTool != null && Game1.player.CurrentTool is Tool && currentTool != null && Game1.player.CurrentTool is Pickaxe)
+                                Game1.player.CurrentTool = new MeleeWeapon("4");
+#else
                             if (Game1.player.CurrentTool != null && Game1.player.CurrentTool is Tool && currentTool != null && Game1.player.CurrentTool is Pickaxe)
                                 Game1.player.CurrentTool = new MeleeWeapon(4);
+#endif
 
                             helper.Reflection.GetField<NetBool>(rockCrab, "shellGone").SetValue(new NetBool(true));
                             helper.Reflection.GetField<NetInt>(rockCrab, "shellHealth").SetValue(new NetInt(0));
@@ -125,6 +130,28 @@ namespace MURDERDRONE
                 string collisionSound = "hitEnemy";
 
                 Vector2 velocityTowardMonster = Utility.getVelocityTowardPoint(Position, monster.Position, projectileVelocity);
+#if v16
+                basicProjectile = new BasicProjectile(
+                   damage,
+                   Projectile.shadowBall,
+                   0,
+                   0,
+                   0,
+                   velocityTowardMonster.X,
+                   velocityTowardMonster.Y,
+                   position.Value,
+                   collisionSound,
+                   firingSound: "daggerswipe",
+                   explode: false,
+                   damagesMonsters: true,
+                   location: location,
+                   firer: this,
+                 collisionBehavior: collisionBehavior
+               )
+                {
+                    IgnoreLocationCollision = (Game1.currentLocation.currentEvent != null)
+                };
+#else
                 basicProjectile = new BasicProjectile(
                     damage,
                     Projectile.shadowBall,
@@ -133,7 +160,7 @@ namespace MURDERDRONE
                     0,
                     velocityTowardMonster.X,
                     velocityTowardMonster.Y,
-                    position,
+                    position.Value,
                     collisionSound,
                     firingSound: "daggerswipe",
                     explode: false,
@@ -146,7 +173,7 @@ namespace MURDERDRONE
                 {
                     IgnoreLocationCollision = (Game1.currentLocation.currentEvent != null)
                 };
-
+#endif
                 location.projectiles.Add(basicProjectile);
                 thrown = true;
             }

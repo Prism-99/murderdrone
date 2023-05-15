@@ -1,10 +1,13 @@
-﻿using System;
+﻿using StardewModdingAPI;
+using StardewModdingAPI.Utilities;
+using System;
 namespace MURDERDRONE
 {
     public class ModConfig
     {
         public bool Active { get; set; }
         public string KeyboardShortcut { get; set; }
+        public SButton Keybind { get; set; }
         public int RotationSpeed { get; set; }
         public int Damage { get; set; }
         public int ProjectileVelocity { get; set; }

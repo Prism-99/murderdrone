@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>sdv1._5.x</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\murderdroneCore\murderdroneCore.projitems" Label="Shared" />
+
+</Project>

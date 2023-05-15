@@ -1,7 +1,15 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MURDERDRONE", "MURDERDRONE\MURDERDRONE.csproj", "{2FC51C4E-EB69-4AB5-B1C1-542F685B0419}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E2D7BC94-2E46-4443-B18E-B743E3C69C08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdv1.5.x", "sdv1.5.x\sdv1.5.x.csproj", "{E53346D0-9ED9-4069-A24E-42263A4F59BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sdv1.6.x", "sdv1.6.x\sdv1.6.x.csproj", "{9D50E982-4D88-4316-9F7F-42D63145155D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "murderdroneCore", "murderdroneCore\murderdroneCore.shproj", "{E9BB7C93-CDB2-45A5-A6E8-6FDF6C3C57E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,9 +17,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2FC51C4E-EB69-4AB5-B1C1-542F685B0419}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FC51C4E-EB69-4AB5-B1C1-542F685B0419}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FC51C4E-EB69-4AB5-B1C1-542F685B0419}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FC51C4E-EB69-4AB5-B1C1-542F685B0419}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E53346D0-9ED9-4069-A24E-42263A4F59BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E53346D0-9ED9-4069-A24E-42263A4F59BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E53346D0-9ED9-4069-A24E-42263A4F59BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E53346D0-9ED9-4069-A24E-42263A4F59BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D50E982-4D88-4316-9F7F-42D63145155D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D50E982-4D88-4316-9F7F-42D63145155D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D50E982-4D88-4316-9F7F-42D63145155D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D50E982-4D88-4316-9F7F-42D63145155D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E9BB7C93-CDB2-45A5-A6E8-6FDF6C3C57E4} = {E2D7BC94-2E46-4443-B18E-B743E3C69C08}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75640FA2-7573-4726-A6FA-CA81A2B1C630}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		murderdroneCore\murderdroneCore.projitems*{9d50e982-4d88-4316-9f7f-42d63145155d}*SharedItemsImports = 5
+		murderdroneCore\murderdroneCore.projitems*{e53346d0-9ed9-4069-a24e-42263a4f59bf}*SharedItemsImports = 5
+		murderdroneCore\murderdroneCore.projitems*{e9bb7c93-cdb2-45a5-a6e8-6fdf6c3c57e4}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
