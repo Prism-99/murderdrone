@@ -5,7 +5,7 @@
     <RootNamespace>murderdrone</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>murderdrone</AssemblyName>
+    <AssemblyName>CombatDrone</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,17 +20,16 @@
 
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
-      <HintPath>Y:\MonoGame.Framework.dll</HintPath>
+      <HintPath>T:\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="SMAPI.Toolkit.CoreInterfaces">
-      <HintPath>Y:\smapi-internal\SMAPI.Toolkit.CoreInterfaces.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>T:\smapi-internal\SMAPI.Toolkit.CoreInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Stardew Valley">
-      <HintPath>Y:\Stardew Valley.dll</HintPath>
+      <HintPath>T:\Stardew Valley.dll</HintPath>
     </Reference>
     <Reference Include="StardewModdingAPI">
-      <HintPath>Y:\StardewModdingAPI.dll</HintPath>
+      <HintPath>T:\StardewModdingAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
 

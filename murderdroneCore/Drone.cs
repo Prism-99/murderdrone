@@ -16,33 +16,35 @@ namespace MURDERDRONE
         private float t;
         private readonly float offsetY = 20f;
         private readonly float offsetX = 5f;
+        private int droneSpeed;
         private bool throwing;
         private bool thrown;
-        private Monster target;
-        private BasicProjectile basicProjectile;
+        private Monster? target = null;
+        private BasicProjectile? basicProjectile = null;
         private int damage;
         private readonly float projectileVelocity;
-        private readonly IModHelper helper;
-
+        private readonly IModHelper? helper = null;
+        private float dRadius = 80f;
         public Drone()
         : base(new AnimatedSprite("Sidekick/Drone", 1, 12, 12), Game1.player.Position, 1, "Drone")
         {
-            this.speed = 14;
+            droneSpeed = 14;
             this.hideShadow.Value = true;
             this.damage = -1;
             this.projectileVelocity = 16;
             this.helper = null;
         }
 
-        public Drone(int speed, int damage, float projectileVelocity, IModHelper helper, string sDroneName)
+        public Drone(int speed, int damage, float projectileVelocity, IModHelper helper, string sDroneName, float droneRadius=80f)
         : base(new AnimatedSprite("Sidekick/Drone", 1, 12, 12), Game1.player.Position, 1, sDroneName)
         {
-            this.speed = speed;
+            droneSpeed = speed;           
             this.hideShadow.Value = true;
             this.damage = damage;
             this.projectileVelocity = projectileVelocity;
             this.helper = helper;
             this.name.Value = sDroneName;
+            dRadius = droneRadius;
         }
 
         public override bool CanSocialize => false;
@@ -58,11 +60,11 @@ namespace MURDERDRONE
 
         public override void update(GameTime time, GameLocation location)
         {
-            float newX = Game1.player.position.X + offsetX + r * (float)Math.Cos(t * 2 * Math.PI);
-            float newY = Game1.player.position.Y - offsetY + r * (float)Math.Sin(t * 2 * Math.PI);
+            float newX = Game1.player.position.X + offsetX + dRadius * (float)Math.Cos(t * 2 * Math.PI);
+            float newY = Game1.player.position.Y - offsetY + dRadius * (float)Math.Sin(t * 2 * Math.PI);
             position.Set(new Vector2(newX, newY));
 
-            t = (t + (float)time.ElapsedGameTime.TotalMilliseconds / (1000 * speed)) % 1;
+            t = (t + (float)time.ElapsedGameTime.TotalMilliseconds / (100 * droneSpeed)) % 1;
 
             if (!throwing)
             {
@@ -77,7 +79,7 @@ namespace MURDERDRONE
                 }
             }
 
-            if (throwing && target.IsMonster)
+            if (throwing && (target?.IsMonster ?? false))
                 ShootTheBastard(time, location, target);
         }
 
@@ -98,13 +100,13 @@ namespace MURDERDRONE
                 BasicProjectile.onCollisionBehavior collisionBehavior = new BasicProjectile.onCollisionBehavior(
                     delegate (GameLocation loc, int x, int y, Character who)
                     {
-                        Tool currentTool = null;
+                        Tool? currentTool = null;
 
                         if (Game1.player.CurrentTool != null && Game1.player.CurrentTool is Tool)
                             currentTool = Game1.player.CurrentTool;
 
-                        if (monster is Bug bug && bug.isArmoredBug)
-                            helper.Reflection.GetField<NetBool>(bug, "isArmoredBug").SetValue(new NetBool(false));
+                        if (monster is Bug bug && bug.isArmoredBug.Value)
+                            helper?.Reflection.GetField<NetBool>(bug, "isArmoredBug").SetValue(new NetBool(false));
 
                         if (monster is RockCrab rockCrab)
                         {
@@ -116,8 +118,8 @@ namespace MURDERDRONE
                                 Game1.player.CurrentTool = new MeleeWeapon(4);
 #endif
 
-                            helper.Reflection.GetField<NetBool>(rockCrab, "shellGone").SetValue(new NetBool(true));
-                            helper.Reflection.GetField<NetInt>(rockCrab, "shellHealth").SetValue(new NetInt(0));
+                            helper?.Reflection.GetField<NetBool>(rockCrab, "shellGone").SetValue(new NetBool(true));
+                            helper?.Reflection.GetField<NetInt>(rockCrab, "shellHealth").SetValue(new NetInt(0));
                         }
 
                         loc.damageMonster(monster.GetBoundingBox(), damage, damage + 1, true, !(who is Farmer) ? Game1.player : who as Farmer);

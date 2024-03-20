@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>murderdrone</RootNamespace>
-    <AssemblyName>murderdrone</AssemblyName>
+    <AssemblyName>CombatDrone</AssemblyName>
   </PropertyGroup>
 
   <Import Project="..\murderdroneCore\murderdroneCore.projitems" Label="Shared" />

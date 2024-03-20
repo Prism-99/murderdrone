@@ -1,10 +1,10 @@
-﻿using System;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Locations;
 using Microsoft.Xna.Framework.Graphics;
 using murderdroneCore;
+using StardewValley.Buildings;
 
 namespace MURDERDRONE
 {
@@ -14,6 +14,7 @@ namespace MURDERDRONE
         private ModConfig Config;
         private string sDroneName = "";
         private bool DroneLoaded = false;
+        private bool LoadDroneAfterSave;
         /*********
         ** Public methods
         *********/
@@ -22,7 +23,6 @@ namespace MURDERDRONE
         public override void Entry(IModHelper helper)
         {
             Config = Helper.ReadConfig<ModConfig>();
-            DroneLoaded = Config.Active;
             GMCMIntegration.Initialize(helper, ModManifest, Config);
 
             if (Config.Keybind == SButton.None)
@@ -42,14 +42,25 @@ namespace MURDERDRONE
             helper.Events.GameLoop.SaveLoaded += GameLoop_SaveLoaded;
             helper.Events.Player.Warped += PlayerEvents_Warped;
             helper.Events.GameLoop.Saved += GameLoop_Saved;
+            helper.Events.GameLoop.DayStarted += GameLoop_DayStarted;
             //
             //  added for SMAPI 4
             //
             helper.Events.Content.AssetRequested += OnAssetRequested;
         }
 
+        private void GameLoop_DayStarted(object? sender, DayStartedEventArgs e)
+        {
+            DroneLoaded = false;
+            LoadDroneAfterSave = LoadDroneAfterSave || Config.Active;
+            if (LoadDroneAfterSave)
+            {
+                AddDrone();
+            }
+        }
 
 
+        //
         // removed for SMAPI 4 migration
         //
         /// <summary>Get whether this instance can load the initial version of the given asset.</summary>
@@ -67,12 +78,13 @@ namespace MURDERDRONE
 
         //    throw new InvalidOperationException($"Unexpected asset '{asset.AssetName}'.");
         //}
+
         //
-        //  added for SMAPI compatability
+        //  added for SMAPI 4.0.0 compatability
         //
         private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
         {
-            if (e.Name.IsEquivalentTo("Sidekick/Drone"))
+            if (e.Name.IsEquivalentTo("Sidekick/Drone")|| e.Name.StartsWith("Portraits/Drone_"))
             {
                 e.LoadFromModFile<Texture2D>("Assets/drone_sprite_robot.png", AssetLoadPriority.Medium);
             }
@@ -83,27 +95,21 @@ namespace MURDERDRONE
         *********/
         private void GameLoop_SaveCreating(object? sender, SaveCreatingEventArgs e)
         {
-            //
-            //  just in case
-            //
-            Helper.WriteConfig(Config);
+            LoadDroneAfterSave = DroneLoaded;
             RemoveDrone();
         }
         private void GameLoop_Saving(object? sender, SavingEventArgs e)
         {
-            Helper.WriteConfig(Config);
+            LoadDroneAfterSave = DroneLoaded;
             RemoveDrone();
         }
         private void GameLoop_Saved(object? sender, SavedEventArgs e)
         {
-            if (Config.Active)
-            {
-                AddDrone();
-            }
         }
         private void GameLoop_SaveLoaded(object? sender, SaveLoadedEventArgs e)
         {
             sDroneName = "Drone_" + Game1.player.name.Value;
+            LoadDroneAfterSave = Config.Active;
         }
 
 
@@ -137,25 +143,56 @@ namespace MURDERDRONE
         /// <param name="e">The event arguments.</param>
         private void PlayerEvents_Warped(object? sender, WarpedEventArgs e)
         {
-            if (!e.IsLocalPlayer || Game1.CurrentEvent != null || !DroneLoaded)
+            if (!LoadDroneAfterSave &&( !e.IsLocalPlayer || Game1.CurrentEvent != null || !DroneLoaded))
                 return;
-            RemoveDrone();
+            RemoveDrone(false);
             AddDrone();
         }
 
-        private void RemoveDrone()
+        private void RemoveDrone(bool updateLoadedStatus = true)
         {
             if (Game1.getCharacterFromName(sDroneName) is NPC drone)
             {
+                if(Game1.currentLocation!=null && Game1.currentLocation.characters.Contains(drone))
+                {
+                    Game1.currentLocation.characters.Remove(drone);
+                }
+                //
+                //  remove the drone from game locations
+                //
                 for (int i = 0; i < Game1.locations.Count; i++)
                 {
                     if (Game1.locations[i].characters.Contains(drone))
                     {
                         Game1.locations[i].characters.Remove(drone);
                     }
+#if v16
+                    if (Game1.locations[i].IsBuildableLocation())
+                    {
+                        GameLocation gl = Game1.locations[i];
+#else
+                    if (Game1.locations[i] is BuildableGameLocation gl)
+                    {
+#endif
+                        //
+                        //  remove the drone from building indoors
+                        //
+                        foreach (Building bl in gl.buildings)
+                        {
+                            if (bl.indoors.Value != null)
+                            {
+                                if (bl.indoors.Value.characters.Contains(drone))
+                                {
+                                    bl.indoors.Value.characters.Remove(drone);
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
-            DroneLoaded = false;
+            if (updateLoadedStatus)
+                DroneLoaded = false;
         }
 
         private void AddDrone()
@@ -163,13 +200,15 @@ namespace MURDERDRONE
             if (Game1.currentLocation == null || Game1.currentLocation is DecoratableLocation)
                 return;
 
-            if (!DroneLoaded)
+            if (!DroneLoaded || Game1.getCharacterFromName(sDroneName) == null)
             {
-                Game1.currentLocation.addCharacter(new Drone(Config.RotationSpeed, Config.Damage, (float)Config.ProjectileVelocity, Helper, sDroneName));
+                Game1.currentLocation.addCharacter(new Drone(Config.RotationSpeed, Config.Damage, Config.ProjectileVelocity, Helper, sDroneName,Config.DroneRadius));
                 DroneLoaded = true;
             }
             else
                 Game1.warpCharacter(Game1.getCharacterFromName(sDroneName), Game1.currentLocation, Game1.player.Position);
+            
+            LoadDroneAfterSave = false;
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿{
-  "Name": "MURDER DRONE",
-  "Version": "0.0.7-unofficial.4-prism99",
+  "Name": "Personal Combat Drone",
+  "Version": "1.0.0",
   "Description": "THIS DRONE WILL MURDER EVERYTHING",
-  "UniqueID": "cambam.MURDERDRONE",
-  "EntryDll": "MURDERDRONE.dll",
-  "MinimumApiVersion": "3.17.0",
-  "UpdateKeys": [ "Nexus:4507" ]
+  "UniqueID": "prism99.cambam.MURDERDRONE.redux",
+  "EntryDll": "CombatDrone.dll",
+  "MinimumApiVersion": "3.18.0",
+  "UpdateKeys": [ "Nexus:18224" ]
 }

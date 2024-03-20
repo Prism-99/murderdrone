@@ -2,6 +2,7 @@
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using GenericModConfigMenu;
+using System;
 
 namespace murderdroneCore
 {
@@ -14,10 +15,11 @@ namespace murderdroneCore
         {
             config.Active = true;
             config.KeyboardShortcut = "F7";
-            config.RotationSpeed = 2;
+            config.RotationSpeed = 10;
             config.Damage = -1;
             config.ProjectileVelocity = 16;
             config.Keybind = SButton.F7;
+            config.DroneRadius = 120;
         }
         public static void Initialize(IModHelper ohelper, IManifest omanifest, ModConfig oconfig)
         {
@@ -48,7 +50,7 @@ namespace murderdroneCore
             //
             configMenu.AddSectionTitle(
                 mod: manifest,
-                text: () => "Murder Drone Options",
+                text: () => "Combat Drone Options",
                 tooltip: () => ""
             );
 
@@ -60,15 +62,29 @@ namespace murderdroneCore
                   setValue: value => config.Keybind = value
 
               );
+            configMenu.AddBoolOption(
+                mod: manifest,
+                name: () => "Active At Start of Day",
+                tooltip: () => "",
+                getValue: () => config.Active,
+                setValue: value => config.Active = value
+                );
 
             configMenu.AddNumberOption(
                  mod: manifest,
                  name: () => "Rotation Speed",
-                 tooltip: () => "",
+                 tooltip: () => "The lower the number, the faster the drone",
                  getValue: () => config.RotationSpeed,
-                 setValue: value => config.RotationSpeed = value
+                 setValue: value => config.RotationSpeed = Math.Max(value, 1)
              );
 
+            configMenu.AddNumberOption(
+                 mod: manifest,
+                 name: () => "Rotation Radius",
+                 tooltip: () => "The larger the number, the bigger the flying circle",
+                 getValue: () => config.DroneRadius,
+                 setValue: value => config.DroneRadius = value
+             );
             configMenu.AddNumberOption(
                  mod: manifest,
                  name: () => "Damage",
