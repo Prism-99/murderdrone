@@ -39,5 +39,4 @@ Thumbs.db
 
 # dotCover
 *.dotCover
-/Assets
 /MURDERDRONE/Logger.cs
