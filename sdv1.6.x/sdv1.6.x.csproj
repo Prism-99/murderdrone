@@ -19,17 +19,25 @@
   <Import Project="..\murderdroneCore\murderdroneCore.projitems" Label="Shared" />
 
   <ItemGroup>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <HintPath>T:\MonoGame.Framework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SMAPI.Toolkit.CoreInterfaces">
       <HintPath>T:\smapi-internal\SMAPI.Toolkit.CoreInterfaces.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Stardew Valley">
       <HintPath>T:\Stardew Valley.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="StardewModdingAPI">
       <HintPath>T:\StardewModdingAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 

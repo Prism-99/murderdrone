@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "sdv1.6.x": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Executable",
+      "executablePath": "T:\\StardewModdingAPI.exe",
+      "commandLineArgs": "--mods-path \"Mods-Testing-Realty\"",
+      "workingDirectory": "T:\\"
+    }
+  }
+}

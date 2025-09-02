@@ -10,8 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Drone.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GMCMIntegration.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IGenericModConfigMenuApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\GMCMIntegration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\IGenericModConfigMenuApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\IQuickSaveAPI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Integration\QuickSaveIntegration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModEntry.cs" />
   </ItemGroup>
@@ -19,8 +21,5 @@
     <Content Include="$(MSBuildThisFileDirectory)Assets\drone_sprite_robot.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Assets\" />
   </ItemGroup>
 </Project>
